@@ -54,6 +54,9 @@ body {
   input {
     border: none !important;
   }
+  .menu {
+    display: none;
+  }
 }
 .fullname,
 .instagram {
@@ -71,18 +74,57 @@ body {
   border-width: 0 0 1px 0;
 }
 .metadata {
-    width: 95%;
-    /* background: red; */
-    display: block;
+  width: 95%;
+  /* background: red; */
+  display: block;
 }
 
 .instagram {
   font-weight: 200;
   font-size: 24pt;
   line-height: 1.4;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.025em;
 }
 
 .instagram:before {
   content: "@";
+}
+
+.menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  background: white;
+  border: 1px solid #000000ee;
+  box-shadow: 0 1px 13px 1px #00000066;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 30px 30px 0;
+}
+
+.menu ul {
+  column-count: 2;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+  display: block;
+  text-align: center;
+  width: 20px;
+  font-weight: 900;
+}
+
+.menu a {
+  color: red;
+}
+
+.hidden {
+  display: none;
 }
