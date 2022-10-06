@@ -43,37 +43,38 @@ function updateElements(handle, name) {
   // Link to the Instagram account
   document.querySelector(".instagram-link").href = url;
 
-  // this is a querstring load, so update both
+  // This is a querstring load action, so update both name and url
   if (url && name) document.querySelector(".instagram").value = handle;
 
-  // update the QR image
+  // Update the QR image
   document.querySelector(".qr-code").src = makeQrUrl(url);
 }
 
 function loadQuerystring() {
   const qs = window.location.search;
 
-  if (qs) {
-    const entries = qs
-      .split(/[?&]/g)
-      .filter((s) => s)
-      .map((s) => s.split("="));
+  if (!qs) return;
 
-    console.assert(entries.lenght !== 2, "Nothing to do here");
-    if (!entries.length === 2) return;
+  const entries = qs
+    .split(/[?&]/g)
+    .filter((s) => s)
+    .map((s) => s.split("="));
 
-    const { fn, ig } = Object.fromEntries(entries);
-    updateElements(ig, fn);
-  }
+  console.assert(entries.length !== 2, "Nothing to do here");
+  if (!entries.length === 2) return;
+
+  const { fn, ig } = Object.fromEntries(entries);
+  updateElements(ig, fn);
 }
 
 function appendModelData(array) {
   const ul = document.querySelector("#models");
   const list = array
     .map(
-      ([fn, _, ig]) => `<li>
+      ([fn, _, ig]) => `
+      <li>
         <a href="/?ig=${ig}&fn=${fn}">${fn}</a> 
-        (@${ig})
+        <em>(@${ig})</em>
       </li>`
     )
     .join("\n");
@@ -81,8 +82,24 @@ function appendModelData(array) {
   ul.innerHTML = list || "<li>Empty</li>";
 }
 
+function bindToggleTrigger() {
+  const toggle = document.querySelector(".menu-icon");
+  const m = document.querySelector("#models");
+
+  toggle.onclick = (e) => {
+    e.stopImmediatePropagation();
+    m.classList.toggle("hidden");
+    document.body.addEventListener(
+      "click", //
+      () => m.classList.add("hidden"),
+      { once: true }
+    );
+  };
+}
+
 (async () => {
   loadQuerystring();
+
   const sesh = sessionStorage.models || null;
   const models = sesh ? JSON.parse(sesh) : await loadTSVdata();
 
@@ -90,24 +107,7 @@ function appendModelData(array) {
   bindToggleTrigger();
 
   if (!sesh) {
-    console.log("Caching session data");
+    console.log("Cache Gsheet as session data");
     sessionStorage.models = JSON.stringify(models);
   }
 })();
-
-function bindToggleTrigger() {
-  // bind the toggle trigger
-  const toggle = document.querySelector(".menu-icon");
-  const m = document.querySelector("#models");
-  toggle.onclick = (e) => {
-    e.stopImmediatePropagation();
-    m.classList.toggle("hidden");
-    document.body.addEventListener(
-      "click",
-      (e) => {
-        m.classList.add("hidden");
-      },
-      { once: true }
-    );
-  };
-}
