@@ -5,7 +5,7 @@ ig.onkeyup = handleChange;
 function handleChange(e) {
   const { value } = e.target;
   const handle = `${value}`.trim().replace(/@/g);
-  updateElements(instaURL);
+  updateElements(value);
 }
 
 function makeQrUrl(value, size = 240) {
